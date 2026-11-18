@@ -3,7 +3,7 @@ import type { UploadedImageModel } from '@/common/model'
 import type { ManagementDirectoryAction, ManagementMediaAction } from '@/common/model/management'
 import { computed, onBeforeUnmount, ref, watch } from 'vue'
 import { ContextmenuEnum } from '@/common/directive/types'
-import { ImageSortEnum } from '@/common/model'
+import { ImageSortEnum, ManagementViewEnum } from '@/common/model'
 import PicxIcon from '@/components/picx-icon/picx-icon.vue'
 import { useImageUploadTime } from '@/composables/use-image-upload-time'
 import { useManagementDirectory } from '@/composables/use-management-directory'
@@ -20,6 +20,7 @@ import ToolsBar from './components/tools-bar/tools-bar.vue'
 
 const { path, directories, images, loading, failed, error, browse, upload, reload } = useManagementDirectory()
 const sortMode = computed(() => store.getters.getUserSettings.management.sort)
+const viewMode = computed(() => store.getters.getUserSettings.management.view)
 const query = ref('')
 const visible = computed(() => filterManagementContent(directories.value, images.value, query.value))
 const sortedDirList = computed(() => sortDirList(visible.value.directories, sortMode.value))
@@ -46,6 +47,9 @@ const sortOptions = [
 ]
 function setSort(value: ImageSortEnum) {
   void store.dispatch('SET_USER_SETTINGS', { management: { sort: value } })
+}
+function toggleView() {
+  void store.dispatch('SET_USER_SETTINGS', { management: { view: viewMode.value === ManagementViewEnum.grid ? ManagementViewEnum.list : ManagementViewEnum.grid } })
 }
 const { backfillUploadTime, cancelBackfill } = useImageUploadTime()
 watch([images, sortMode], ([items, mode]) => {
@@ -109,7 +113,9 @@ onBeforeUnmount(() => {
       <h1 v-else>
         {{ $t('management_page.workspace.contents') }}
       </h1>
-      <span class="grid-indicator" role="img"><PicxIcon name="layout-grid" /></span>
+      <button type="button" class="grid-indicator" :title="$t(viewMode === ManagementViewEnum.grid ? 'management_page.workspace.listView' : 'management_page.workspace.gridView')" :disabled="managementBusy" @click="toggleView">
+        <PicxIcon :name="viewMode === ManagementViewEnum.grid ? 'list' : 'layout-grid'" />
+      </button>
       <el-select :disabled="managementBusy" :model-value="sortMode" @update:model-value="setSort">
         <el-option v-for="option in sortOptions" :key="option.value" :value="option.value" :label="$t(option.labelKey)" />
       </el-select>
@@ -142,7 +148,7 @@ onBeforeUnmount(() => {
           <h2>{{ $t('management_page.workspace.media') }} <span>{{ sortedImageList.length }}</span></h2>
           <ImageSelector v-if="!selection.selectedImages.value.length" :total="sortedImageList.length" :selected="0" :all-selected="false" :indeterminate="false" :filtered="Boolean(query.trim())" :busy="managementBusy" :copying="managementOperation?.kind === 'copy'" :deleting="managementOperation?.kind === 'delete'" @select-all="selection.selectAll" />
         </div>
-        <ul class="image-card-list">
+        <ul class="image-card-list" :class="{ 'list-view': viewMode === ManagementViewEnum.list }">
           <li v-for="image in sortedImageList" :key="image.uuid">
             <ImageCard :image-obj="image" :loading="isManagementMediaLoading(image)" :loading-text="managementOperation ? $t(`management_page.workspace.${managementOperation.kind}Loading`) : undefined" :copying="managementOperation?.kind === 'copy' && isManagementMediaLoading(image)" :selected="selection.isSelected(image)" :busy="managementBusy" @select="selection.select(image, $event)" @availability="setAvailability(image, $event)" @action="mediaAction(image, $event)" />
           </li>

@@ -281,6 +281,7 @@
       "folders": "資料夾",
       "media": "圖片與影片",
       "gridView": "網格檢視",
+      "listView": "列表檢視",
       "noResults": "目前目錄沒有符合的結果",
       "searchScope": "僅搜尋目前目錄已載入的資料夾和媒體名稱。",
       "clearSearch": "清除搜尋",

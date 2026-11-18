@@ -214,6 +214,16 @@
   }
 
   @media (max-width 767px) {
+    .media-thumbnail {
+      aspect-ratio 1
+    }
+
+    .image-preview {
+      img, video {
+        object-fit contain
+      }
+    }
+
     .media-details {
       padding 6px 10px 0
     }

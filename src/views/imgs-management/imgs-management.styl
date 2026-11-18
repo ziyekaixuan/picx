@@ -28,10 +28,24 @@
       justify-content center
       width 44px
       height 44px
+      padding 0
+      border 0
       border-radius 8px
       background var(--picx-color-primary-soft)
       color var(--picx-color-primary)
+      font inherit
+      cursor pointer
       order 1
+
+      &:hover:not(:disabled) {
+        background var(--picx-color-primary)
+        color var(--picx-color-on-primary)
+      }
+
+      &:disabled {
+        opacity 0.45
+        cursor default
+      }
     }
 
     .el-select {
@@ -148,6 +162,10 @@
     > li {
       min-width 0
       min-height 240px
+    }
+
+    &.list-view {
+      grid-template-columns minmax(0, 1fr)
     }
   }
 

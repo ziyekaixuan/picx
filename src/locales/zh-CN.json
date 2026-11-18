@@ -281,6 +281,7 @@
       "folders": "文件夹",
       "media": "图片与视频",
       "gridView": "网格视图",
+      "listView": "列表视图",
       "noResults": "当前目录没有匹配结果",
       "searchScope": "仅搜索当前目录已加载的文件夹和媒体名称。",
       "clearSearch": "清空搜索",

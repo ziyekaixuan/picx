@@ -281,6 +281,7 @@
       "folders": "Folders",
       "media": "Images and videos",
       "gridView": "Grid view",
+      "listView": "List view",
       "noResults": "No matches in this directory",
       "searchScope": "Search only filters folder and media names already loaded in this directory.",
       "clearSearch": "Clear search",

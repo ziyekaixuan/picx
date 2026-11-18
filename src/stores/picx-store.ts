@@ -30,6 +30,7 @@ import {
   ElementPlusSizeEnum,
   ImageLinkTypeEnum,
   ImageSortEnum,
+  ManagementViewEnum,
   ThemeModeEnum,
   WatermarkPositionEnum,
 } from '@/common/model'
@@ -191,6 +192,7 @@ function createDefaultUserSettings(): UserSettingsModel {
     },
     management: {
       sort: ImageSortEnum.default,
+      view: ManagementViewEnum.grid,
     },
     imageLinkType: {
       selected: ImageLinkTypeEnum.GitHub,

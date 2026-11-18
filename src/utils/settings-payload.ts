@@ -1,5 +1,5 @@
 import type { UserSettingsModel } from '@/common/model'
-import { CompressEncoderEnum, ImageLinkTypeEnum, ImageSortEnum, WatermarkPositionEnum } from '@/common/model'
+import { CompressEncoderEnum, ImageLinkTypeEnum, ImageSortEnum, ManagementViewEnum, WatermarkPositionEnum } from '@/common/model'
 
 export interface SettingsPayload {
   imageName?: Partial<Omit<UserSettingsModel['imageName'], 'addPrefix'>> & { addPrefix?: Partial<UserSettingsModel['imageName']['addPrefix']> }
@@ -68,7 +68,7 @@ const formats: Reader = (value) => {
 const payloadReader = object({
   imageName: object({ enableHash: boolean, enableTimestamp: boolean, addPrefix: object({ enable: boolean, prefix: string }) }),
   compress: object({ enable: boolean, encoder: enumValue(Object.values(CompressEncoderEnum)) }),
-  management: object({ sort: enumValue(Object.values(ImageSortEnum)) }),
+  management: object({ sort: enumValue(Object.values(ImageSortEnum)), view: enumValue(Object.values(ManagementViewEnum)) }),
   imageLinkType: object({ selected: string, presetList: rules }),
   imageLinkFormat: object({ enable: boolean, selected: string, presetList: formats }),
   deploy: object({ customDomain: string }),
@@ -85,7 +85,7 @@ export function projectSettings(settings: UserSettingsModel): UserSettingsModel 
   return {
     imageName: { enableHash: settings.imageName.enableHash, enableTimestamp: settings.imageName.enableTimestamp, addPrefix: { enable: settings.imageName.addPrefix.enable, prefix: settings.imageName.addPrefix.prefix } },
     compress: { enable: settings.compress.enable, encoder: settings.compress.encoder },
-    management: { sort: settings.management.sort },
+    management: { sort: settings.management.sort, view: settings.management.view },
     imageLinkType: { selected: settings.imageLinkType.selected, presetList: Object.fromEntries(Object.entries(settings.imageLinkType.presetList).map(([key, rule]) => [key, { id: rule.id, name: rule.name, rule: rule.rule, ...(rule.editable === undefined ? {} : { editable: rule.editable }) }])) },
     imageLinkFormat: { enable: settings.imageLinkFormat.enable, selected: settings.imageLinkFormat.selected, presetList: settings.imageLinkFormat.presetList.map(format => ({ name: format.name, format: format.format })) },
     deploy: { customDomain: settings.deploy.customDomain },

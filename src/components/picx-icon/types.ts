@@ -10,5 +10,5 @@ export type PicxIconName
     | 'rotate-ccw' | 'circle-dashed' | 'rocket' | 'clock-3' | 'plus'
     | 'arrow-up-right' | 'copy' | 'ellipsis' | 'trash-2' | 'triangle-alert'
     | 'loader-circle' | 'maximize-2'
-    | 'arrow-left' | 'chevron-right' | 'search' | 'images' | 'layout-grid' | 'link' | 'check' | 'square-minus' | 'play' | 'video' | 'pencil' | 'folder-input'
+    | 'arrow-left' | 'chevron-right' | 'search' | 'images' | 'layout-grid' | 'list' | 'link' | 'check' | 'square-minus' | 'play' | 'video' | 'pencil' | 'folder-input'
     | 'minus'

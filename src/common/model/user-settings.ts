@@ -41,6 +41,12 @@ export enum LanguageEnum {
   en = 'en',
 }
 
+export enum ManagementViewEnum {
+  grid = 'grid',
+
+  list = 'list',
+}
+
 export interface UserSettingsModel {
   imageName: {
     enableHash: boolean
@@ -58,6 +64,8 @@ export interface UserSettingsModel {
   management: {
     /** 图床管理页排序模式 */
     sort: ImageSortEnum
+    /** 图床管理页图片排列模式 */
+    view: ManagementViewEnum
   }
   imageLinkType: {
     selected: string
