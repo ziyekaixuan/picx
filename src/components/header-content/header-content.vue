@@ -22,20 +22,24 @@ function updateStuck() {
   isStuck.value = window.scrollY > stuckThreshold
 }
 
-// 上滑（往下滚）隐藏顶栏，下滑（往上滚）显示顶栏
+// 上滑（往下滚）隐藏顶栏，下滑（往上滚）显示顶栏；
+// 位移按累计量判断，慢速滑动也能正常触发
 function updateVisibility() {
   const scrollY = window.scrollY
-  const deltaY = scrollY - lastScrollY
-  lastScrollY = scrollY
-  if (Math.abs(deltaY) < 4)
-    return
-  if (scrollY <= 120 || deltaY < 0) {
+  if (scrollY <= 120) {
     isHidden.value = false
+    lastScrollY = scrollY
     return
   }
-  if (document.querySelector('.nav-panel'))
-    return
-  isHidden.value = true
+  const deltaY = scrollY - lastScrollY
+  if (deltaY <= -4) {
+    isHidden.value = false
+    lastScrollY = scrollY
+  }
+  else if (deltaY >= 10 && !document.querySelector('.nav-panel')) {
+    isHidden.value = true
+    lastScrollY = scrollY
+  }
 }
 
 function onScroll() {

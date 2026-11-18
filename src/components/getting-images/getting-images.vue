@@ -119,7 +119,6 @@ defineExpose({ reset, remove, selectFiles })
   >
     <input :id="inputId" ref="input" type="file" :disabled="disabled" :accept="acceptTypes" :title="$t(videoEnabled ? 'upload_workspace.choose' : 'upload_workspace.choose_images')" multiple @change="onSelect">
     <template v-if="mode === 'workspace'">
-      <span class="upload-symbol"><PicxIcon name="image-up" :size="28" /></span>
       <div v-if="items.length" class="thumb-grid">
         <template v-for="item in items" :key="item.uuid">
           <video v-if="isVideoItem(item)" class="thumb" :src="thumbSrc(item)" muted playsinline preload="metadata" />
