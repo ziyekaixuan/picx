@@ -48,6 +48,14 @@
       }
     }
 
+    .refresh-button {
+      &.is-loading svg {
+        transform-box fill-box
+        transform-origin center
+        animation picx-spin 1s linear infinite
+      }
+    }
+
     .el-select {
       width 180px
     }
@@ -241,5 +249,11 @@
         min-height 0
       }
     }
+  }
+}
+
+@keyframes picx-spin {
+  to {
+    transform rotate(360deg)
   }
 }

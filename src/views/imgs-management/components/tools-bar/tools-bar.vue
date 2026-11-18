@@ -16,9 +16,6 @@
     </nav>
     <div class="directory-tools">
       <slot />
-      <el-button :title="$t('management_page.reload')" :loading="loading" :disabled="loading || busy" @click="emit('reload')">
-        <PicxIcon v-if="!loading" name="refresh-cw" />
-      </el-button>
     </div>
   </div>
 </template>
@@ -29,8 +26,8 @@ import { computed } from 'vue'
 import PicxIcon from '@/components/picx-icon/picx-icon.vue'
 import { directoryBreadcrumbs } from '@/utils/management-utils'
 
-const props = defineProps<{ path: string, loading: boolean, busy: boolean }>()
-const emit = defineEmits<{ browse: [path: string], reload: [] }>()
+const props = defineProps<{ path: string, busy: boolean }>()
+const emit = defineEmits<{ browse: [path: string] }>()
 const breadcrumbs = computed(() => directoryBreadcrumbs(props.path))
 const parent = computed(() => breadcrumbs.value.at(-2)?.path ?? '/')
 </script>

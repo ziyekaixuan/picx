@@ -118,7 +118,7 @@ onBeforeUnmount(() => {
 
 <template>
   <div class="page-container management-page-container">
-    <ToolsBar :path="path" :loading="loading" :busy="managementBusy" @browse="browse" @reload="refreshDirectory">
+    <ToolsBar :path="path" :busy="managementBusy" @browse="browse">
       <label class="management-search">
         <PicxIcon name="search" :size="18" />
         <input v-model="query" :disabled="managementBusy" type="search" :placeholder="$t('management_page.workspace.search')">
@@ -132,7 +132,7 @@ onBeforeUnmount(() => {
       <button type="button" class="grid-indicator" :title="$t(viewMode === ManagementViewEnum.grid ? 'management_page.workspace.listView' : 'management_page.workspace.gridView')" :disabled="managementBusy" @click="toggleView">
         <PicxIcon :name="viewMode === ManagementViewEnum.grid ? 'list' : 'layout-grid'" />
       </button>
-      <button type="button" class="refresh-button" :title="$t('management_page.reload')" :disabled="loading || managementBusy" @click="refreshDirectory">
+      <button type="button" class="refresh-button" :class="{ 'is-loading': loading }" :title="$t('management_page.reload')" :disabled="loading || managementBusy" @click="refreshDirectory">
         <PicxIcon name="refresh-cw" />
       </button>
       <el-select :disabled="managementBusy" :model-value="sortMode" @update:model-value="setSort">
