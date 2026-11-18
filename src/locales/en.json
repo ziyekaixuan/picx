@@ -9,7 +9,8 @@
   "cancel": "Cancel",
   "author": "Author",
   "app": {
-    "press_back_again_to_exit": "Press back again to exit"
+    "press_back_again_to_exit": "Press back again to exit",
+    "back_to_top": "Back to top"
   },
   "document": "Document",
   "shortcut_key": "Shortcut Key",

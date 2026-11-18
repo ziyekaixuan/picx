@@ -9,7 +9,8 @@
   "cancel": "取消",
   "author": "作者",
   "app": {
-    "press_back_again_to_exit": "再按一次返回退出應用"
+    "press_back_again_to_exit": "再按一次返回退出應用",
+    "back_to_top": "回到頂部"
   },
   "document": "文件",
   "shortcut_key": "快速鍵",

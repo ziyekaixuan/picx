@@ -7,6 +7,42 @@
   background transparent
   font-size 14px
 
+  .pull-refresh-indicator {
+    display flex
+    position fixed
+    z-index var(--picx-layer-header)
+    top 100px
+    left 50%
+    align-items center
+    justify-content center
+    width 44px
+    height 44px
+    border 1px solid var(--picx-color-border)
+    border-radius 50%
+    background var(--picx-color-surface)
+    box-shadow 0 6px 20px var(--picx-color-shadow)
+    color var(--picx-color-text-muted)
+    opacity 0
+    transform translate(-50%, -8px) scale(0.8)
+    transition opacity var(--picx-duration) ease, transform var(--picx-duration) ease
+    pointer-events none
+
+    &.visible {
+      opacity 1
+      transform translate(-50%, 0) scale(1)
+    }
+
+    &.ready {
+      color var(--picx-color-primary)
+    }
+
+    &.refreshing svg {
+      transform-box fill-box
+      transform-origin center
+      animation picx-spin 1s linear infinite
+    }
+  }
+
   .management-summary {
     display flex
     flex-wrap wrap

@@ -9,6 +9,7 @@ import { useBackHandler } from '@/composables/use-android-back-button'
 import { useImageUploadTime } from '@/composables/use-image-upload-time'
 import { useManagementDirectory } from '@/composables/use-management-directory'
 import { useManagementSelection } from '@/composables/use-management-selection'
+import { usePullToRefresh } from '@/composables/use-pull-to-refresh'
 import { copyManagementLinks, deleteMediaWithConfirmation, editDirectory, isManagementMediaLoading, managementBusy, managementDeleteResult, managementOperation, managementPropertiesImage, openManagementRepository, openMediaMove, renameMedia, showMediaProperties } from '@/services/management-actions'
 import { store } from '@/stores'
 import { getUpOneLevelDir } from '@/stores/modules/dir-image-list/utils'
@@ -67,6 +68,10 @@ async function refreshDirectory() {
   await refreshImageCache(images.value.map(image => image.path))
   await reload()
 }
+const { pullState, pullRotation } = usePullToRefresh({
+  enabled: () => !loading.value && !managementBusy.value,
+  onRefresh: refreshDirectory,
+})
 const { backfillUploadTime, cancelBackfill } = useImageUploadTime()
 watch([images, sortMode], ([items, mode]) => {
   cancelBackfill()
@@ -118,7 +123,9 @@ onBeforeUnmount(() => {
 
 <template>
   <div class="page-container management-page-container">
-    <ToolsBar :path="path" :busy="managementBusy" @browse="browse">
+    <div class="pull-refresh-indicator" :class="{ visible: pullState !== 'idle', ready: pullState === 'ready', refreshing: pullState === 'refreshing' }">
+      <PicxIcon name="refresh-cw" :style="{ transform: `rotate(${pullRotation}deg)` }" />
+    </div>    <ToolsBar :path="path" :busy="managementBusy" @browse="browse">
       <label class="management-search">
         <PicxIcon name="search" :size="18" />
         <input v-model="query" :disabled="managementBusy" type="search" :placeholder="$t('management_page.workspace.search')">

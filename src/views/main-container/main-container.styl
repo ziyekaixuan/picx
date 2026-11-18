@@ -36,4 +36,38 @@
       }
     }
   }
+
+  .back-to-top {
+    display flex
+    position fixed
+    z-index var(--picx-layer-header)
+    right 20px
+    bottom 24px
+    align-items center
+    justify-content center
+    width 48px
+    height 48px
+    padding 0
+    border 1px solid var(--picx-color-border)
+    border-radius 50%
+    background var(--picx-color-surface)
+    box-shadow 0 6px 20px var(--picx-color-shadow)
+    color var(--picx-color-primary)
+    font inherit
+    cursor pointer
+    opacity 0
+    transform translateY(12px)
+    transition opacity var(--picx-duration) ease, transform var(--picx-duration) ease
+    pointer-events none
+
+    &.visible {
+      opacity 1
+      transform translateY(0)
+      pointer-events auto
+    }
+
+    &:hover {
+      background var(--picx-color-primary-soft)
+    }
+  }
 }
