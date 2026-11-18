@@ -12,6 +12,7 @@ import { useManagementSelection } from '@/composables/use-management-selection'
 import { copyManagementLinks, deleteMediaWithConfirmation, editDirectory, isManagementMediaLoading, managementBusy, managementDeleteResult, managementOperation, managementPropertiesImage, openManagementRepository, openMediaMove, renameMedia, showMediaProperties } from '@/services/management-actions'
 import { store } from '@/stores'
 import { getUpOneLevelDir } from '@/stores/modules/dir-image-list/utils'
+import { refreshImageCache } from '@/utils/image-cache-utils'
 import { filterManagementContent, sortDirList, sortImageList } from '@/utils/management-utils'
 import FolderCard from './components/folder-card/folder-card.vue'
 import ImageCard from './components/image-card/image-card.vue'
@@ -60,6 +61,11 @@ function setSort(value: ImageSortEnum) {
 }
 function toggleView() {
   void store.dispatch('SET_USER_SETTINGS', { management: { view: viewMode.value === ManagementViewEnum.grid ? ManagementViewEnum.list : ManagementViewEnum.grid } })
+}
+// 刷新当前目录：清掉本目录图片缓存并重新拉取目录内容
+async function refreshDirectory() {
+  await refreshImageCache(images.value.map(image => image.path))
+  await reload()
 }
 const { backfillUploadTime, cancelBackfill } = useImageUploadTime()
 watch([images, sortMode], ([items, mode]) => {
@@ -112,7 +118,7 @@ onBeforeUnmount(() => {
 
 <template>
   <div class="page-container management-page-container">
-    <ToolsBar :path="path" :loading="loading" :busy="managementBusy" @browse="browse" @reload="reload">
+    <ToolsBar :path="path" :loading="loading" :busy="managementBusy" @browse="browse" @reload="refreshDirectory">
       <label class="management-search">
         <PicxIcon name="search" :size="18" />
         <input v-model="query" :disabled="managementBusy" type="search" :placeholder="$t('management_page.workspace.search')">
@@ -125,6 +131,9 @@ onBeforeUnmount(() => {
       </h1>
       <button type="button" class="grid-indicator" :title="$t(viewMode === ManagementViewEnum.grid ? 'management_page.workspace.listView' : 'management_page.workspace.gridView')" :disabled="managementBusy" @click="toggleView">
         <PicxIcon :name="viewMode === ManagementViewEnum.grid ? 'list' : 'layout-grid'" />
+      </button>
+      <button type="button" class="refresh-button" :title="$t('management_page.reload')" :disabled="loading || managementBusy" @click="refreshDirectory">
+        <PicxIcon name="refresh-cw" />
       </button>
       <el-select :disabled="managementBusy" :model-value="sortMode" @update:model-value="setSort">
         <el-option v-for="option in sortOptions" :key="option.value" :value="option.value" :label="$t(option.labelKey)" />

@@ -3,7 +3,7 @@
     <div class="media-thumbnail">
       <el-button ref="previewButton" class="image-preview" :title="$t('management_page.workspace.previewMedia', { name: imageObj.name })" :disabled="busy || !imageUrl || failed" @click="showPreview = true">
         <video v-if="isVideo && imageUrl" :key="retryKey" :src="imageUrl" muted preload="metadata" playsinline @loadedmetadata="loaded" @error="loadFailed" />
-        <img v-else-if="imageUrl" :key="`${imageUrl}-${retryKey}`" :src="imageUrl" alt="" loading="lazy" @load="loaded" @error="loadFailed">
+        <img v-else-if="imageUrl" :key="`${imageUrl}-${retryKey}`" :src="displayUrl" alt="" loading="lazy" @load="loaded" @error="loadFailed">
         <PicxIcon v-if="isVideo && !failed" class="play-icon" name="play" :size="32" />
       </el-button>
       <label class="media-select">
@@ -46,7 +46,7 @@
         </template>
       </el-dropdown>
     </div>
-    <el-image-viewer v-if="showPreview && !isVideo && imageUrl" :url-list="[imageUrl]" hide-on-click-modal @close="closePreview" />
+    <el-image-viewer v-if="showPreview && !isVideo && imageUrl" :url-list="[displayUrl ?? imageUrl]" hide-on-click-modal @close="closePreview" />
     <el-dialog v-if="isVideo" v-model="showPreview" :title="imageObj.name" width="min(800px, 92vw)" append-to-body destroy-on-close @closed="closePreview">
       <video v-if="showPreview" class="video-preview" :src="imageUrl" controls playsinline preload="metadata" />
     </el-dialog>
@@ -62,6 +62,7 @@ import { computed, nextTick, onBeforeUnmount, ref, useTemplateRef, watch } from 
 import { ContextmenuEnum } from '@/common/directive/types'
 import PicxIcon from '@/components/picx-icon/picx-icon.vue'
 import { registerBackHandler } from '@/composables/use-android-back-button'
+import { imageCacheVersion, resolveCachedImageUrl } from '@/utils/image-cache-utils'
 import { generateImageLink } from '@/utils/image-link-utils'
 
 const props = withDefaults(defineProps<{ imageObj: UploadedImageModel, selected: boolean, busy?: boolean, loading?: boolean, loadingText?: string, copying?: boolean }>(), { busy: false })
@@ -73,6 +74,31 @@ const failed = ref(false)
 const retryKey = ref(0)
 const dimensions = ref<{ width: number, height: number } | null>(null)
 const showPreview = ref(false)
+const displayUrl = ref<string | undefined>(undefined)
+let displayObjectUrl: string | undefined
+let resolveRequest = 0
+function setDisplayUrl(url: string | undefined) {
+  if (displayObjectUrl) {
+    URL.revokeObjectURL(displayObjectUrl)
+    displayObjectUrl = undefined
+  }
+  if (url?.startsWith('blob:'))
+    displayObjectUrl = url
+  displayUrl.value = url
+}
+// 图片走本地缓存解析，视频不缓存（避免整文件下载）
+async function resolveDisplayUrl() {
+  const request = ++resolveRequest
+  const url = imageUrl.value
+  if (!url || isVideo.value) {
+    setDisplayUrl(url)
+    return
+  }
+  const resolved = await resolveCachedImageUrl(url)
+  if (resolveRequest !== request || imageUrl.value !== url)
+    return
+  setDisplayUrl(resolved)
+}
 let unregisterPreviewBack: (() => void) | undefined
 // 预览打开时返回键先关闭预览
 watch(showPreview, (open) => {
@@ -88,12 +114,20 @@ watch(showPreview, (open) => {
     unregisterPreviewBack = undefined
   }
 })
-onBeforeUnmount(() => unregisterPreviewBack?.())
+onBeforeUnmount(() => {
+  unregisterPreviewBack?.()
+  if (displayObjectUrl)
+    URL.revokeObjectURL(displayObjectUrl)
+})
 const size = computed(() => Number.isFinite(props.imageObj.size) && props.imageObj.size > 0 ? `${Number((props.imageObj.size / 1024).toFixed(2))} KB` : '')
 const menu: ManagementMediaAction[] = ['property', 'rename', 'move', 'repository', 'delete']
 watch(imageUrl, () => {
   failed.value = false
   dimensions.value = null
+  void resolveDisplayUrl()
+}, { immediate: true })
+watch(imageCacheVersion, () => {
+  void resolveDisplayUrl()
 })
 function loaded(event: Event) {
   const element = event.target
