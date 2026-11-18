@@ -4,6 +4,7 @@ import { onBeforeUnmount, onMounted } from 'vue'
 import i18n from '@/plugins/vue/i18n'
 import router from '@/router'
 import { store } from '@/stores'
+import { getLaunchPage } from '@/utils/launch-page'
 
 /**
  * 安卓返回键逐层返回。返回 true 表示本次返回已被消费，不再继续向外传递。
@@ -58,28 +59,29 @@ function handleBackButton() {
       return
   }
   const path = router.currentRoute.value.path
-  // 上传页是返回链的终点，双击返回退出应用
-  if (path === '/upload') {
+  const home = getLaunchPage()
+  // 启动页是返回链的终点，双击返回退出应用
+  if (path === home) {
     pressBackAgainToExit()
     return
   }
   if (path === '/') {
     if (store.getters.getUserConfigInfo.logined)
-      void router.replace('/upload')
+      void router.replace(home)
     else
       pressBackAgainToExit()
     return
   }
   const back = router.options.history.state.back
   if (typeof back === 'string' && back) {
-    // 跳过登录页，返回链终点始终是上传页
+    // 跳过登录页，返回链终点始终是启动页
     if (router.resolve(back).path === '/')
-      void router.replace('/upload')
+      void router.replace(home)
     else
       router.back()
   }
   else {
-    void router.push('/upload')
+    void router.push(home)
   }
 }
 

@@ -71,6 +71,7 @@ import { useGithubConnection } from '@/composables/use-github-connection'
 import router from '@/router'
 import { store } from '@/stores'
 import { cleanConnectionQuery, connectionReturnTo } from '@/utils/login-navigation'
+import { getLaunchPage, LaunchPageEnum } from '@/utils/launch-page'
 
 const { connection, busy, connect, restore } = useGithubConnection()
 const loggedInAccount = computed(() => {
@@ -128,7 +129,8 @@ async function initializeConnectionPage() {
   }
   const config = store.getters.getUserConfigInfo
   if (query.jump !== '0' && config.token && config.logined && config.owner && config.repo && config.branch) {
-    await router.replace({ path: '/upload', query: config.selectedDir ? {} : { directory: '1' } })
+    const home = getLaunchPage()
+    await router.replace({ path: home, query: home === LaunchPageEnum.upload && !config.selectedDir ? { directory: '1' } : {} })
   }
 }
 

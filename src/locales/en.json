@@ -532,6 +532,10 @@
     "no_preview": "Connect a repository and select a valid link rule to preview."
   },
   "settings_workspace": {
+    "app": "App settings",
+    "app_desc": "Settings for the app itself.",
+    "launch_page": "Launch page",
+    "launch_page_desc": "The page shown when the app starts. The first run after install always opens the home page.",
     "processing": "Upload processing",
     "processing_desc": "Choose file naming and image processing before upload.",
     "sharing": "Links and sharing",

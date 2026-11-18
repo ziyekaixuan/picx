@@ -532,6 +532,10 @@
     "no_preview": "連接儲存庫並選擇有效連結規則後可預覽。"
   },
   "settings_workspace": {
+    "app": "應用設定",
+    "app_desc": "應用本身的行為設定。",
+    "launch_page": "啟動頁面",
+    "launch_page_desc": "打開應用時顯示的頁面；安裝後首次運行固定為首頁。",
     "processing": "上傳處理",
     "processing_desc": "設定檔案命名與上傳前的圖片處理方式。",
     "sharing": "連結與分享",

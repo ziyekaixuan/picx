@@ -532,6 +532,10 @@
     "no_preview": "连接仓库并选择有效链接规则后可预览。"
   },
   "settings_workspace": {
+    "app": "应用设置",
+    "app_desc": "应用本身的行为设置。",
+    "launch_page": "启动页面",
+    "launch_page_desc": "打开应用时显示的页面；安装后首次运行固定为首页。",
     "processing": "上传处理",
     "processing_desc": "设置文件命名和上传前的图片处理方式。",
     "sharing": "链接与分享",

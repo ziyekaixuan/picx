@@ -1,12 +1,13 @@
 import type { LocationQuery, LocationQueryRaw, RouteLocationRaw } from 'vue-router'
+import { getLaunchPage, LaunchPageEnum } from '@/utils/launch-page'
 
 const returnPaths = ['/upload', '/management', '/settings']
 const callbackKeys = ['code', 'state', 'error', 'error_description', 'error_uri', 'setup_action', 'installation_id', 'token', 'access_token']
 
 export function connectionReturnTo(value: unknown): string {
   if (value === '/config')
-    return '/upload'
-  return typeof value === 'string' && returnPaths.includes(value) ? value : '/upload'
+    return getLaunchPage()
+  return typeof value === 'string' && returnPaths.includes(value) ? value : getLaunchPage()
 }
 
 export function connectionLocation(returnTo: unknown = '/upload', focus = false): RouteLocationRaw {
@@ -17,8 +18,10 @@ export function legacyConfigLocation(query: LocationQuery, saved: { complete: bo
   const returnTo = connectionReturnTo(query.returnTo)
   if (query.focus === '1')
     return connectionLocation(returnTo, true)
-  if (saved.complete)
-    return { path: '/upload', query: saved.hasDirectory ? {} : { directory: '1' } }
+  if (saved.complete) {
+    const home = getLaunchPage()
+    return { path: home, query: home === LaunchPageEnum.upload && !saved.hasDirectory ? { directory: '1' } : {} }
+  }
   return { path: '/', query: { jump: '0', returnTo, ...(query.auto === '1' ? { auto: '1' } : {}) } }
 }
 
