@@ -8,6 +8,9 @@
   "confirm": "Confirm",
   "cancel": "Cancel",
   "author": "Author",
+  "app": {
+    "press_back_again_to_exit": "Press back again to exit"
+  },
   "document": "Document",
   "shortcut_key": "Shortcut Key",
   "username": "Username",

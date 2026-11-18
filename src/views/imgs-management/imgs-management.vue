@@ -5,11 +5,13 @@ import { computed, onBeforeUnmount, ref, watch } from 'vue'
 import { ContextmenuEnum } from '@/common/directive/types'
 import { ImageSortEnum, ManagementViewEnum } from '@/common/model'
 import PicxIcon from '@/components/picx-icon/picx-icon.vue'
+import { useBackHandler } from '@/composables/use-android-back-button'
 import { useImageUploadTime } from '@/composables/use-image-upload-time'
 import { useManagementDirectory } from '@/composables/use-management-directory'
 import { useManagementSelection } from '@/composables/use-management-selection'
 import { copyManagementLinks, deleteMediaWithConfirmation, editDirectory, isManagementMediaLoading, managementBusy, managementDeleteResult, managementOperation, managementPropertiesImage, openManagementRepository, openMediaMove, renameMedia, showMediaProperties } from '@/services/management-actions'
 import { store } from '@/stores'
+import { getUpOneLevelDir } from '@/stores/modules/dir-image-list/utils'
 import { filterManagementContent, sortDirList, sortImageList } from '@/utils/management-utils'
 import FolderCard from './components/folder-card/folder-card.vue'
 import ImageCard from './components/image-card/image-card.vue'
@@ -21,6 +23,14 @@ import ToolsBar from './components/tools-bar/tools-bar.vue'
 const { path, directories, images, loading, failed, error, browse, upload, reload } = useManagementDirectory()
 const sortMode = computed(() => store.getters.getUserSettings.management.sort)
 const viewMode = computed(() => store.getters.getUserSettings.management.view)
+// 返回键在子目录中先逐层回到上级目录
+useBackHandler(() => {
+  if (path.value !== '/') {
+    browse(getUpOneLevelDir(path.value).dirPath)
+    return true
+  }
+  return false
+}, 10)
 const query = ref('')
 const visible = computed(() => filterManagementContent(directories.value, images.value, query.value))
 const sortedDirList = computed(() => sortDirList(visible.value.directories, sortMode.value))

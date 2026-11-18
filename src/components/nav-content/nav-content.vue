@@ -48,6 +48,7 @@
 import { computed, nextTick, onMounted, onUnmounted, ref, useTemplateRef, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import PicxIcon from '@/components/picx-icon/picx-icon.vue'
+import { useBackHandler } from '@/composables/use-android-back-button'
 import i18n from '@/plugins/vue/i18n'
 import { useStore } from '@/stores'
 import { connectionLocation } from '@/utils/login-navigation'
@@ -70,6 +71,15 @@ const closeMenu = (restoreFocus = false) => {
     menuButton.value?.focus()
   }
 }
+
+// 菜单打开时返回键先关闭菜单
+useBackHandler(() => {
+  if (menuOpen.value) {
+    closeMenu(true)
+    return true
+  }
+  return false
+}, 20)
 
 const toggleMenu = async () => {
   menuOpen.value = !menuOpen.value

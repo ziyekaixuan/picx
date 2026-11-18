@@ -58,9 +58,10 @@
 import type { ButtonInstance } from 'element-plus/es/components/button/index'
 import type { UploadedImageModel } from '@/common/model'
 import type { ManagementMediaAction } from '@/common/model/management'
-import { computed, nextTick, ref, useTemplateRef, watch } from 'vue'
+import { computed, nextTick, onBeforeUnmount, ref, useTemplateRef, watch } from 'vue'
 import { ContextmenuEnum } from '@/common/directive/types'
 import PicxIcon from '@/components/picx-icon/picx-icon.vue'
+import { registerBackHandler } from '@/composables/use-android-back-button'
 import { generateImageLink } from '@/utils/image-link-utils'
 
 const props = withDefaults(defineProps<{ imageObj: UploadedImageModel, selected: boolean, busy?: boolean, loading?: boolean, loadingText?: string, copying?: boolean }>(), { busy: false })
@@ -72,6 +73,22 @@ const failed = ref(false)
 const retryKey = ref(0)
 const dimensions = ref<{ width: number, height: number } | null>(null)
 const showPreview = ref(false)
+let unregisterPreviewBack: (() => void) | undefined
+// 预览打开时返回键先关闭预览
+watch(showPreview, (open) => {
+  if (open) {
+    unregisterPreviewBack?.()
+    unregisterPreviewBack = registerBackHandler(() => {
+      void closePreview()
+      return true
+    }, 30)
+  }
+  else {
+    unregisterPreviewBack?.()
+    unregisterPreviewBack = undefined
+  }
+})
+onBeforeUnmount(() => unregisterPreviewBack?.())
 const size = computed(() => Number.isFinite(props.imageObj.size) && props.imageObj.size > 0 ? `${Number((props.imageObj.size / 1024).toFixed(2))} KB` : '')
 const menu: ManagementMediaAction[] = ['property', 'rename', 'move', 'repository', 'delete']
 watch(imageUrl, () => {

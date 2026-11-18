@@ -8,6 +8,7 @@ import { useI18n } from 'vue-i18n'
 import { ElementPlusSizeEnum, LanguageEnum } from '@/common/model'
 import CopyFallbackDialog from '@/components/copy-fallback-dialog/copy-fallback-dialog.vue'
 import { deployGhPages, deploymentShortcutEnabled, useDeploymentLifecycle } from '@/components/deploy-status-bar/deploy-status-bar.util'
+import { useAndroidBackButton } from '@/composables/use-android-back-button'
 import { useCloudSettingsSync } from '@/composables/use-cloud-settings-sync'
 import { useDeploymentShortcut } from '@/composables/use-deployment-shortcut'
 import router from '@/router'
@@ -19,6 +20,7 @@ import { initGithubAuthorize } from '@/views/picx-login/picx-login.util'
 
 const { locale } = useI18n()
 const store = useStore()
+useAndroidBackButton()
 useCloudSettingsSync()
 useDeploymentLifecycle()
 useDeploymentShortcut(() => ['/upload', '/settings'].includes(router.currentRoute.value.path) && deploymentShortcutEnabled(), () => {

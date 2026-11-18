@@ -8,6 +8,9 @@
   "confirm": "确定",
   "cancel": "取消",
   "author": "作者",
+  "app": {
+    "press_back_again_to_exit": "再按一次返回退出应用"
+  },
   "document": "文档",
   "shortcut_key": "快捷键",
   "username": "用户名",

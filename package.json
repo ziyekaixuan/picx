@@ -42,6 +42,7 @@
   },
   "dependencies": {
     "@capacitor/android": "^8.6.2",
+    "@capacitor/app": "^8.1.2",
     "@capacitor/cli": "^8.6.2",
     "@capacitor/core": "^8.6.2",
     "@jsquash/avif": "2.1.1",
