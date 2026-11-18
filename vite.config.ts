@@ -13,7 +13,8 @@ export default defineConfig(({ command, mode }) => {
   const variablesPath = fileURLToPath(new URL('./src/styles/variables.styl', import.meta.url))
 
   return {
-    base: '/images-hosting/',
+    // Capacitor serves the built app from local files, so use relative asset paths
+    base: mode === 'capacitor' ? './' : '/images-hosting/',
     plugins: createVitePlugins(viteEnv, isBuild),
     resolve: {
       alias: {
