@@ -97,7 +97,7 @@ onMounted(() => {
           </el-button>
         </section>
         <div class="upload-intake">
-          <GettingImages ref="gettingImages" :disabled="uploading" mode="workspace" video-enabled @get-img-list="addFiles" @receiving="receiving = $event" />
+          <GettingImages ref="gettingImages" :disabled="uploading" :items="queue" mode="workspace" video-enabled @get-img-list="addFiles" @receiving="receiving = $event" />
         </div>
       </div>
     </div>

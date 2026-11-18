@@ -54,20 +54,16 @@
 
   &.workspace {
     flex-direction column
-    gap 20px
-    min-height 408px
+    gap 12px
+    min-height 0
     height 100%
-    padding 32px
+    padding 20px 24px
     text-align center
     border-width 1px
     border-radius 24px
 
-    h2 {
-      margin 0
-      color var(--picx-color-text)
-      font-size 24px
-      font-weight 600
-      line-height 1.5
+    &.has-items {
+      justify-content flex-start
     }
 
     p {
@@ -78,12 +74,30 @@
 
     .upload-symbol {
       display grid
+      flex-shrink 0
       place-items center
-      width 56px
-      height 56px
+      width 48px
+      height 48px
       color var(--picx-color-primary)
       background var(--picx-color-primary-soft)
       border-radius var(--picx-radius-control)
+    }
+
+    .thumb-grid {
+      display grid
+      grid-template-columns repeat(auto-fill, minmax(56px, 1fr))
+      gap 8px
+      width 100%
+      max-height 128px
+      overflow-y auto
+
+      .thumb {
+        width 100%
+        aspect-ratio 1
+        object-fit cover
+        border-radius 8px
+        background var(--picx-color-surface-muted)
+      }
     }
 
     .el-button {
@@ -99,12 +113,7 @@
     }
 
     @media (max-width 767px) {
-      min-height 340px
-      padding 24px 16px
-
-      h2 {
-        font-size 20px
-      }
+      padding 16px
     }
   }
 }

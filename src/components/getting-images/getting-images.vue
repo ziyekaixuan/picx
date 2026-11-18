@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { ImageHandleResult } from '@/common/model'
+import type { ImageHandleResult, UploadImageModel } from '@/common/model'
 import { computed, onMounted, onUnmounted, ref, useId, useTemplateRef } from 'vue'
 import PicxIcon from '@/components/picx-icon/picx-icon.vue'
 import { useStore } from '@/stores'
@@ -10,7 +10,8 @@ const props = withDefaults(defineProps<{
   disabled?: boolean
   videoEnabled?: boolean
   mode?: 'preview' | 'workspace'
-}>(), { disabled: false, videoEnabled: false, mode: 'preview' })
+  items?: UploadImageModel[]
+}>(), { disabled: false, videoEnabled: false, mode: 'preview', items: () => [] })
 const emit = defineEmits<{ getImgList: [files: ImageHandleResult[]], receiving: [active: boolean] }>()
 const store = useStore()
 const inputId = useId()
@@ -25,6 +26,8 @@ let disposed = false
 const activeReads = new Set<symbol>()
 const isVideoPreview = computed(() => curShowImg.value && isVideo(curShowImg.value.file.type))
 const setCurImg = () => curShowImg.value = imgList.value.at(-1) ?? null
+const thumbSrc = (item: UploadImageModel) => item.base64.compressBase64 || item.base64.watermarkBase64 || item.base64.originalBase64
+const isVideoItem = (item: UploadImageModel) => isVideo(item.fileInfo.originalFile?.type ?? '')
 
 async function unifiedHandle(files: File[]) {
   if (props.disabled || disposed || !files.length)
@@ -109,7 +112,7 @@ defineExpose({ reset, remove, selectFiles })
 <template>
   <div
     class="getting-images-container"
-    :class="{ workspace: mode === 'workspace', focus: uploadAreaState.isActive && curShowImg, dragging, disabled }"
+    :class="{ workspace: mode === 'workspace', 'has-items': mode === 'workspace' && items.length > 0, focus: uploadAreaState.isActive && curShowImg, dragging, disabled }"
     @dragover.prevent="dragging = !disabled"
     @dragleave.prevent="dragging = false"
     @drop.stop.prevent="onDrop"
@@ -117,7 +120,12 @@ defineExpose({ reset, remove, selectFiles })
     <input :id="inputId" ref="input" type="file" :disabled="disabled" :accept="acceptTypes" :title="$t(videoEnabled ? 'upload_workspace.choose' : 'upload_workspace.choose_images')" multiple @change="onSelect">
     <template v-if="mode === 'workspace'">
       <span class="upload-symbol"><PicxIcon name="image-up" :size="28" /></span>
-      <h2>{{ $t('upload_workspace.drop') }}</h2>
+      <div v-if="items.length" class="thumb-grid">
+        <template v-for="item in items" :key="item.uuid">
+          <video v-if="isVideoItem(item)" class="thumb" :src="thumbSrc(item)" muted playsinline preload="metadata" />
+          <img v-else class="thumb" :src="thumbSrc(item)" :alt="item.fileInfo.originalFile?.name ?? ''">
+        </template>
+      </div>
       <el-button type="primary" :disabled="disabled" @click="selectFiles">
         {{ $t('upload_workspace.choose') }}
       </el-button>
