@@ -11,11 +11,11 @@
   }
 
   .connection-intro {
-    margin 8px 0 32px
+    margin 8px 0 24px
     text-align center
 
     h1 {
-      font-size 38px
+      font-size 32px
       line-height 1.5
     }
 
@@ -27,65 +27,13 @@
     }
   }
 
-  .connection-steps {
-    display flex
-    flex-wrap wrap
-    align-items center
-    justify-content center
-    gap 24px
-    margin 28px 0 0
-    padding 0
-    list-style none
-
-    li {
-      display flex
-      align-items center
-      gap 8px
-      color var(--picx-color-text-muted)
-
-      + li::before {
-        width 52px
-        height 1px
-        margin-right 16px
-        background var(--picx-color-border)
-        content ''
-      }
-
-      &.active {
-        color var(--picx-color-primary)
-
-        .step-number {
-          color var(--picx-color-on-primary)
-          background var(--picx-color-primary)
-          border-color var(--picx-color-primary)
-        }
-      }
-    }
-
-    .step-number {
-      display grid
-      place-items center
-      box-sizing border-box
-      width 28px
-      height 28px
-      background var(--picx-color-surface)
-      border 1px solid var(--picx-color-border)
-      border-radius 50%
-    }
-  }
-
-  .connection-cards {
-    display grid
-    grid-template-columns repeat(2, minmax(0, 1fr))
-    gap 24px
-  }
-
   .connection-card {
     display flex
     flex-direction column
     box-sizing border-box
-    min-height 446px
-    padding 36px
+    max-width 560px
+    margin 0 auto
+    padding 28px 32px
     background var(--picx-color-surface)
     border 1px solid var(--picx-color-border)
     border-radius 24px
@@ -118,20 +66,6 @@
     color var(--picx-color-text)
     background var(--picx-color-primary-soft)
     border-radius 16px
-  }
-
-  .recommended {
-    padding 6px 12px
-    color var(--picx-color-primary)
-    background var(--picx-color-primary-soft)
-    border-radius 20px
-  }
-
-  .revocation-note {
-    display flex
-    align-items center
-    gap 6px
-    margin-top 16px
   }
 
   .token-field {
@@ -253,25 +187,11 @@
       margin 0 0 24px
 
       h1 {
-        font-size 30px
+        font-size 28px
       }
-    }
-
-    .connection-steps {
-      gap 12px
-      justify-content flex-start
-
-      li + li::before {
-        display none
-      }
-    }
-
-    .connection-cards {
-      grid-template-columns minmax(0, 1fr)
     }
 
     .connection-card {
-      min-height 0
       padding 24px
 
       h2 {
