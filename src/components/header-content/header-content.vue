@@ -5,6 +5,7 @@ import HeaderTools from '@/components/header-tools/header-tools.vue'
 import NavContent from '@/components/nav-content/nav-content.vue'
 
 const headerBox = useTemplateRef<HTMLElement>('headerBox')
+const navContent = useTemplateRef<InstanceType<typeof NavContent>>('navContent')
 const isStuck = ref(false)
 const isHidden = ref(false)
 let stuckThreshold = 0
@@ -36,7 +37,7 @@ function updateVisibility() {
     isHidden.value = false
     lastScrollY = scrollY
   }
-  else if (deltaY >= 10 && !document.querySelector('.nav-panel')) {
+  else if (deltaY >= 10 && !navContent.value?.isDropdownOpen()) {
     isHidden.value = true
     lastScrollY = scrollY
   }
@@ -67,12 +68,12 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <header ref="headerBox" class="header-content-box" :class="{ 'is-stuck': isStuck, 'is-hidden': isHidden }">
+  <header ref="headerBox" class="header-content-box" :class="{ 'is-stuck': isStuck, 'is-auto-hidden': isHidden }">
     <RouterLink class="brand-box" :to="{ path: '/', query: { jump: '0' } }" :aria-label="$t('header.home')">
       <BrandLogo />
       <span class="product-name">{{ $t('header.product') }}</span>
     </RouterLink>
-    <NavContent>
+    <NavContent ref="navContent">
       <HeaderTools />
     </NavContent>
   </header>

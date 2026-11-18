@@ -112,6 +112,8 @@ const onOutsidePointer = (event: PointerEvent) => {
   }
 }
 
+defineExpose({ isDropdownOpen: () => compact.value && menuOpen.value })
+
 watch(() => route.fullPath, () => closeMenu())
 
 onMounted(() => {
